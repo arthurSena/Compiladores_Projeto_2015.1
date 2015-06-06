@@ -1,3 +1,8 @@
-public class 
-132arthur 
-{}
+public class arthur{ 
+
+}
+
+
+String x = 10
+
+/** Isso eh um comentario*/

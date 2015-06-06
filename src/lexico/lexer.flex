@@ -39,6 +39,18 @@ DIGITOS=[0-9]
 ALFA_NUMERICO={LETRAS}|{DIGITOS}
 IDENTIFICADOR={LETRAS}({ALFA_NUMERICO})* 
 
+LineTerminator = \r|\n|\r\n
+InputCharacter = [^\r\n]
+WhiteSpace     = {LineTerminator} | [ \t\f]
+
+ /* comments */
+    Comment = {TraditionalComment} | {EndOfLineComment} | {DocumentationComment}
+	TraditionalComment   = "/*" [^*] ~"*/" | "/*" "*"+ "/"
+    // Comment can be the last line of the file, without line terminator.
+    EndOfLineComment     = "//" {InputCharacter}* {LineTerminator}?
+    DocumentationComment = "/**" {CommentContent} "*"+ "/"
+    CommentContent       = ( [^*] | \*+ [^/*] )*
+
 %%
 
 ("{") {contador ++; return new Yytoken(contador, yytext(), Simbolos.OpenBracket.toString(), yyline, yychar); }
@@ -91,6 +103,11 @@ IDENTIFICADOR={LETRAS}({ALFA_NUMERICO})*
 ("try") {contador++; return new Yytoken(contador, yytext(), Simbolos.TRY.toString(), yyline, yychar); }
 ("while") {contador++; return new Yytoken(contador, yytext(), Simbolos.WHILE.toString(), yyline, yychar); }
 {IDENTIFICADOR} {contador++; return new Yytoken(contador, yytext(), Simbolos.ID.toString(), yyline, yychar); }
+ {Comment}                      { /* ignore */ }
+ /* operators */
+      "="                            { contador++; return new Yytoken(contador, yytext(), Simbolos.EQ.toString(), yyline, yychar); }
+      "=="                           { contador++; return new Yytoken(contador, yytext(), Simbolos.EQEQ.toString(), yyline, yychar); }
+      "+"                            { contador++; return new Yytoken(contador, yytext(), Simbolos.PLUS.toString(), yyline, yychar); }
 " "         { } 
 [\n]         { } 
 [\t\r]             { } 

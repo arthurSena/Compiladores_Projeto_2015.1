@@ -8,7 +8,7 @@ public class Main {
 
 	public static void main(String[] args) throws Exception{
 		// new Symbol(Simbolos.PLUS);
-		FileReader file = new FileReader("/home/arthur/workspace/JflexExemplo/src/lexico/entrada.txt");
+		FileReader file = new FileReader("/home/arthur/workspace/Compiladores_Projeto_2015.1/src/lexico/entrada.txt");
 		alexico(file);
 		String _i=  "";
 	}

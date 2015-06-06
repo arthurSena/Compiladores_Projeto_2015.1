@@ -50,5 +50,8 @@ public enum Simbolos {
 		OpenBracket,
 		CloseBracket,
 		ID,
+		EQ,
+		PLUS,
+		EQEQ,
 		ERRO
 }
