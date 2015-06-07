@@ -1,3 +1,1 @@
-public class 
-132arthur 
-{}
+double x = 4;

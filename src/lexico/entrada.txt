@@ -1,8 +1,1 @@
-public class arthur{ 
-
-}
-
-
-String x = 10
-
-/** Isso eh um comentario*/
+double x = 4;

@@ -2,16 +2,32 @@ package lexico;
 
 import java.io.FileReader;
 
+import sintatico.*;
+
+import java.io.*;
+
+import java_cup.parser;
 import java_cup.runtime.Symbol;
 
 public class Main {
 
 	public static void main(String[] args) throws Exception{
-		// new Symbol(Simbolos.PLUS);
-		FileReader file = new FileReader("/home/arthur/workspace/Compiladores_Projeto_2015.1/src/lexico/entrada.txt");
+		//##########################----Analise Lexica-----####################
+		FileReader file = new FileReader("/home/arthur/workspace/JflexExemplo/src/lexico/entrada.txt");
 		alexico(file);
-		String _i=  "";
-	}
+		
+		//#########################-----Essa vai ser a parte da Analise Sintatica-----####################
+//		try {
+//		      parser p = new parser(new Analizador(new FileReader("/home/arthur/workspace/JflexExemplo/src/lexico/entrada.txt")));
+//		      Object result = p.parse().value;
+//		 
+//
+//		    } catch (Exception e) {
+//		      /* do cleanup here -- possibly rethrow e */
+//		      } finally {
+//		        /* do close out here */
+//		        }
+		  } 
 
 	public static void alexico(FileReader fichero) {
 		// Creamos la instancia de la clase analizador (yyle x)
@@ -22,10 +38,12 @@ public class Main {
 			try {
 				// como hemos renombrado el metodo en las directiva ahora es
 				// nextToken
-				token = sampleLex.nextToken();
+				System.out.println("sdfklsjdflksajdfljsadlfj");
+				token = (Yytoken) sampleLex.yylex();
+				System.out.println("dddddddddddddddd");
 			} catch (java.io.IOException e) {
-				System.out.println("Error en nextToken()");
-			}
+				System.out.println("Error em nextToken()");
+			} 
 //				catch (java.lang.Error e) {
 //					System.out.println("Lexic Error.");
 //					System.out.println(token);
@@ -34,7 +52,8 @@ public class Main {
 			// Mientrasno este vacio
 			if (token != null)
 				// Escribimos en fichero Salida
-				System.out.println(token);
+				System.out.println(token  + "\n");
+			System.out.println(token==null);
 		} while (token != null);
 	}
 }

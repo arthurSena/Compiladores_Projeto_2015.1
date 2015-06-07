@@ -1,7 +1,8 @@
 package lexico;
 
-class Yytoken {
-	Yytoken(int numToken, String text, String compo, int line, int charBegin) {
+public class Yytoken extends java_cup.runtime.Symbol{
+	Yytoken(int numToken, String text, int compo, int line, int charBegin) {
+		super(compo, -1, -1, text);
 		// Contador para el número de tokens reconocidos
 		m_numToken = numToken;
 		// String del token reconocido
@@ -17,19 +18,13 @@ class Yytoken {
 	// Métodos de los atributos de la clase
 	public int m_numToken;
 	public String m_text;
-	public String m_compo;
+	public int m_compo;
 	public int m_line;
 	public int m_charBegin;
 
 	public String toString() {
-		if (m_compo.equals("ERRO")){
-			return  m_compo 
-					+ " Line: " + m_line + " Column: " + m_charBegin;			
-		}
-		else{
-			return "Token #" + m_numToken + ": " + m_text + " C.Lexico: " + m_compo
+			return "Token #" + m_numToken + ": " + m_text + " C.Lexico: " + Simbolos.values()[m_compo]
 					+ " Line: " + m_line + " Column: " + m_charBegin;
-		}
 	}
 
 }

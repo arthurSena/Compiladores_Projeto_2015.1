@@ -1,0 +1,64 @@
+import java_cup.runtime.*;
+
+/* Parser code so that it can interface with the scanner created with JFlex and change the way that it reports errors (include line and column number of the error).*/
+parser code  {: 
+  public void report_error(String message, Object info) {
+    StringBuilder m = new StringBuilder("Error ");
+
+    if (info instanceof java_cup.runtime.Symbol) 
+      m.append( "("+info.toString()+")" );
+     
+    m.append(" : "+message);
+   
+    System.out.println(m);
+  }
+   
+  public void report_fatal_error(String message, Object info) {
+    report_error(message, info);
+    throw new RuntimeException("Fatal Syntax Error");
+  }
+:};
+
+/* Use the scanner created with JFlex  */
+//scan with {: return Analizador.yylex(); :};
+
+/* ------------Declaration of Terminals and Non Terminals Section----------- */
+
+/* Terminals (tokens returned by the scanner).
+
+   Terminals that have no value are listed first and then terminals that do
+   have an value, in this case an integer value, are listed on the next line
+   down. */	
+
+terminal java.lang.Number FLOATING_POINT_LITERAL;
+terminal FLOAT;
+
+/* Non Terminals used in the Grammar Section.
+
+   Non Terminals that have an object value are listed first and then Non Terminals
+   that have an integer value are listed.  An object value means that it can be
+   any type, it isn't set to a specific type.  So it could be an integer or a String or
+   whatever. */
+non terminal floating_point_type;
+non terminal Integer    expr, factor, term;
+
+/* -------------Precedence and Associatively of Terminals Section----------- */
+
+/*
+Precedence of Non Terminals could be defined here.  If you do define precedence
+here you won't need to worry about precedence in the Grammar Section.
+i.e. that TIMES should have a higher precedence than PLUS.
+
+The precedence defined here would look something like this where the lower
+line always will have higher precedence than the line before it.
+
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE;
+*/
+
+/* ----------------------------Grammar Section-------------------- */ 
+initial                 ::=   floating_point_type   {: /* Code for EOF here */ :}
+                          ;
+floating_point_type ::= 
+		FLOAT 
+	;
