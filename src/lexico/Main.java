@@ -7,6 +7,7 @@ import sintatico.*;
 import java.io.*;
 
 import java_cup.parser;
+import java_cup.sym;
 import java_cup.runtime.Symbol;
 
 public class Main {
@@ -32,15 +33,15 @@ public class Main {
 	public static void alexico(FileReader fichero) {
 		// Creamos la instancia de la clase analizador (yyle x)
 		Analizador sampleLex = new Analizador(fichero);
-		Yytoken token = null;
+//		Yytoken token = null;
+		java_cup.runtime.Symbol token = null;
 		String buff;
 		do {
 			try {
 				// como hemos renombrado el metodo en las directiva ahora es
 				// nextToken
-				System.out.println("sdfklsjdflksajdfljsadlfj");
-				token = (Yytoken) sampleLex.yylex();
-				System.out.println("dddddddddddddddd");
+//				token = (Yytoken) sampleLex.yylex();
+				token =  sampleLex.next_token();
 			} catch (java.io.IOException e) {
 				System.out.println("Error em nextToken()");
 			} 
@@ -53,7 +54,7 @@ public class Main {
 			if (token != null)
 				// Escribimos en fichero Salida
 				System.out.println(token  + "\n");
-			System.out.println(token==null);
-		} while (token != null);
+//			System.out.println(token==null);
+		} while (!token.equals((new java_cup.runtime.Symbol(sym.EOF))));
 	}
 }

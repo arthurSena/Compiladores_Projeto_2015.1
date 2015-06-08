@@ -6,7 +6,7 @@ public class Yytoken extends java_cup.runtime.Symbol{
 		// Contador para el número de tokens reconocidos
 		m_numToken = numToken;
 		// String del token reconocido
-		m_text = new String(text);
+		m_text = text;
 		// Tipo de componente léxico encontrado
 		m_compo = compo;
 		// Número de linea

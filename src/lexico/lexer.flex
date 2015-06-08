@@ -1,6 +1,7 @@
 package lexico;
 
-//import java_cup.runtime.*;
+import java_cup.runtime.*;
+
 //import static lexico.Simbolos.java
 
 %% 
@@ -14,7 +15,7 @@ package lexico;
   private int contador; //CONTADOR DE TOKENS
   
   private void printError(String text, int line, int column){
-  		System.out.println("Lexical Error on character: " + text + "at Line: " + line + " Column: " + column);
+  		System.out.println("Lexical Error on character: " + text + " at Line: " + line + " Column: " + column);
   }
   
 %}  
@@ -23,14 +24,17 @@ package lexico;
        contador = 0; 
 %init} 
 
+%column
+
 %line 
 
 %char 
 
-//%cup
+%cup
+%cupdebug
 
-%eof{//break;
-%eof}
+//%eofval{ return new Yytoken(contador, yytext(), sym.EOF, yyline, yycolumn);
+//%eofval}
 
 LETRAS=[A-Za-z] 
 DIGITOS=[0-9]
@@ -41,7 +45,7 @@ LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
 WhiteSpace     = {LineTerminator} | [ \t\f]
 
-DecIntegerLiteral = 0 | [1-9][0-9]*
+DecIntegerLiteral = 0 | {DIGITOS}{DIGITOS}*
 
 FLit1    = [0-9]+ \. [0-9]* 
 FLit2    = \. [0-9]+ 
@@ -49,7 +53,7 @@ FLit3    = [0-9]+
 Exponent = [eE] [+-]? [0-9]+                                    
                                     
 floatingPointLiteral = ({FLit1}|{FLit2}|{FLit3}) {Exponent}? [fF]
-DoubleLiteral = ({FLit1}|{FLit2}|{FLit3}) {Exponent}?
+DoubleLiteral = ({FLit1}|{FLit2}|{FLit3}) {Exponent}?[dD]
 
 special = "!"|"%"|"^"|"&"|"-"|"|"|"~"|"["|"]"|"\"|"'"|":"|"""|"?"|","|"."|"#"|"@"|"`"|"_"
 
@@ -94,8 +98,8 @@ modifier =
 
 %%
 //----------------------------------------SEPARATORS------------------------------------------------
-("(") {contador ++; return new Yytoken(contador, yytext(), Simbolos.OpenPar.ordinal(), yyline, yychar);}
-(")") {contador ++; return new Yytoken(contador, yytext(), Simbolos.ClosePar.ordinal(), yyline, yychar);}
+("(") {contador ++; return new Yytoken(contador, null, sym.LPAREN, yyline, yychar);}
+(")") {contador ++; return new Yytoken(contador, null, sym.RPAREN, yyline, yychar);}
 ("{") {contador ++; return new Yytoken(contador, yytext(), Simbolos.OpenCurlyBraces.ordinal(), yyline, yychar); }
 ("}") {contador ++; return new Yytoken(contador, yytext(), Simbolos.CloseCurlyBraces.ordinal(), yyline, yychar); }
 (";") {contador ++; return new Yytoken(contador, yytext(), Simbolos.SEMICOLON.ordinal(), yyline, yychar);}
@@ -156,12 +160,10 @@ modifier =
 
 //-------------------------------------------------------------------------------------------------
 
-//-------------------------------------IDENTIFIER--------------------------------------------------
-{IDENTIFICADOR} {contador++; return new Yytoken(contador, yytext(), Simbolos.ID.ordinal(), yyline, yychar); }
-//-------------------------------------------------------------------------------------------------
+
 
 //-------------------------------------INTEGER_LITERAL---------------------------------------------
-//{DecIntegerLiteral} {contador++; return new Yytoken(contador, yytext(), Simbolos.INTEGER_LITERAL.ordinal(), yyline, yychar);}
+{DecIntegerLiteral} {contador++; return new Yytoken(contador, yytext(), Simbolos.INTEGER_LITERAL.ordinal(), yyline, yychar);}
 //-------------------------------------------------------------------------------------------------
 
 //-------------------------------------FLOAT_LITERAL---------------------------------------------
@@ -171,6 +173,10 @@ modifier =
 //------------------------------------------DOUBLE_LITERAL-------------------------------------------------------
 {DoubleLiteral} {contador++; return new Yytoken(contador, yytext(), Simbolos.DOUBLE_LITERAL.ordinal(), yyline, yychar);}
 //-------------------------------------------------------------------------------------------------
+
+//-------------------------------------IDENTIFIER--------------------------------------------------
+{IDENTIFICADOR} {contador++; return new Yytoken(contador, yytext(), Simbolos.ID.ordinal(), yyline, yychar); }
+//-------------------------------------------------------------------------------------------------	
 
 //----------------------------------------COMMENTS-------------------------------------------------
 {Comment}                      { }
@@ -188,7 +194,7 @@ modifier =
 //-------------------------------------------WHITESPACE--------------------------------------------
 {WhiteSpace} {}
 //-------------------------------------------------------------------------------------------------
-
+<<EOF>> { return new Yytoken(contador, yytext(), sym.EOF, yyline, yycolumn); }
 //-----------------------------------------------ERROR---------------------------------------------
 . { printError(yytext(), yyline, yychar);}
 //-------------------------------------------------------------------------------------------------
