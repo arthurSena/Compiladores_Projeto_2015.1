@@ -12,6 +12,8 @@ import java_cup.runtime.*;
 %class Analizador 
 
 %{ 
+  StringBuilder string = new StringBuilder();
+
   private int contador; //CONTADOR DE TOKENS
   
   private void printError(String text, int line, int column){
@@ -94,101 +96,196 @@ modifier =
  | "String"
  | "enum"
  
+ StringCharacter = [^\r\n\"\\]
+SingleCharacter = [^\r\n\'\\]
  
+%state STRING 
+%state CHARLITERAL	
 
 %%
+<YYINITIAL> {
 //----------------------------------------SEPARATORS------------------------------------------------
-("(") {contador ++; return new Yytoken(contador, null, sym.LPAREN, yyline, yychar);}
-(")") {contador ++; return new Yytoken(contador, null, sym.RPAREN, yyline, yychar);}
-("{") {contador ++; return new Yytoken(contador, yytext(), Simbolos.OpenCurlyBraces.ordinal(), yyline, yychar); }
-("}") {contador ++; return new Yytoken(contador, yytext(), Simbolos.CloseCurlyBraces.ordinal(), yyline, yychar); }
-(";") {contador ++; return new Yytoken(contador, yytext(), Simbolos.SEMICOLON.ordinal(), yyline, yychar);}
-("[") {contador ++; return new Yytoken(contador, yytext(), Simbolos.OpenBracket.ordinal(), yyline, yychar);}
-("]") {contador ++; return new Yytoken(contador, yytext(), Simbolos.CloseBracket.ordinal(), yyline, yychar);}
-(",") {contador ++; return new Yytoken(contador, yytext(), Simbolos.COMMA.ordinal(), yyline, yychar);}
-(".") {contador ++; return new Yytoken(contador, yytext(), Simbolos.POINT.ordinal(), yyline, yychar);}
+("(") {contador ++; return new Yytoken(contador, null, sym.LPAREN, yyline+1, yycolumn+1);}
+(")") {contador ++; return new Yytoken(contador, null, sym.RPAREN, yyline+1, yycolumn+1);}
+("{") {contador ++; return new Yytoken(contador, null, sym.LBRACE, yyline+1, yycolumn+1); }
+("}") {contador ++; return new Yytoken(contador, null, sym.RBRACE, yyline+1, yycolumn+1); }
+(";") {contador ++; return new Yytoken(contador, null, sym.LBRACK, yyline+1, yycolumn+1);}
+("[") {contador ++; return new Yytoken(contador, null, sym.RBRACK, yyline+1, yycolumn+1);}
+("]") {contador ++; return new Yytoken(contador, null, sym.SEMICOLON, yyline+1, yycolumn+1);}
+(",") {contador ++; return new Yytoken(contador, null, sym.COMMA, yyline+1, yycolumn+1);}
+(".") {contador ++; return new Yytoken(contador, null, sym.DOT, yyline+1, yycolumn+1);}
 //--------------------------------------------------------------------------------------------------
 
 //----------------------------------------MODIFIER--------------------------------------------------
-//{modifier} {contador ++; return new Yytoken(contador, yytext(), Simbolos.MODIFIER.ordinal(), yyline, yychar);}
-("public")  {contador ++; return new Yytoken(contador, yytext(), Simbolos.PUBLIC.ordinal(), yyline, yychar);}
-("private") {contador ++; return new Yytoken(contador, yytext(), Simbolos.PRIVATE.ordinal(), yyline, yychar);}
-("protected") {contador ++; return new Yytoken(contador, yytext(), Simbolos.PROTECTED.ordinal(), yyline, yychar);}
-("static") {contador ++; return new Yytoken(contador, yytext(), Simbolos.STATIC.ordinal(), yyline, yychar);}
-("final") {contador ++; return new Yytoken(contador, yytext(), Simbolos.FINAL.ordinal(), yyline, yychar);}
-("native") {contador ++; return new Yytoken(contador, yytext(), Simbolos.NATIVE.ordinal(), yyline, yychar);}
-("synchronized") {contador ++; return new Yytoken(contador, yytext(), Simbolos.SYNCHRONIZED.ordinal(), yyline, yychar);}
-("abstract") {contador ++; return new Yytoken(contador, yytext(), Simbolos.ABSTRACT.ordinal(), yyline, yychar);}
-( "transient") {contador ++; return new Yytoken(contador, yytext(), Simbolos.TRANSIENT.ordinal(), yyline, yychar);} 
+//{modifier} {contador ++; return new Yytoken(contador, null, sym.LPAREN, yyline+1, yycolumn+1);}
+("public")  {contador ++; return new Yytoken(contador, null, sym.PUBLIC, yyline+1, yycolumn+1);}
+("private") {contador ++; return new Yytoken(contador, null, sym.PRIVATE, yyline+1, yycolumn+1);}
+("protected") {contador ++; return new Yytoken(contador, null, sym.PROTECTED, yyline+1, yycolumn+1);}
+("static") {contador ++; return new Yytoken(contador, null,sym.STATIC, yyline+1, yycolumn+1);}
+("final") {contador ++; return new Yytoken(contador, null, sym.FINAL, yyline+1, yycolumn+1);}
+("native") {contador ++; return new Yytoken(contador, null, sym.NATIVE, yyline+1, yycolumn+1);}
+("synchronized") {contador ++; return new Yytoken(contador, null, sym.SYNCHRONIZED, yyline+1, yycolumn+1);}
+("abstract") {contador ++; return new Yytoken(contador, null, sym.ABSTRACT, yyline+1, yycolumn+1);}
+( "transient") {contador ++; return new Yytoken(contador, null, sym.TRANSIENT, yyline+1, yycolumn+1);} 
 //--------------------------------------------------------------------------------------------------
 
 //----------------------------------------TYPE SPECIFIER--------------------------------------------
-{type_specifier} {contador ++; return new Yytoken(contador, yytext(), Simbolos.TYPE_SPECIFIER.ordinal(), yyline, yychar);}
+//{type_specifier} {contador ++; return new Yytoken(contador, null, sym.TRANSIENT, yyline+1, yycolumn+1);}
+("boolean")  {contador ++; return new Yytoken(contador, null, sym.BOOLEAN, yyline+1, yycolumn+1);}
+("byte") {contador ++; return new Yytoken(contador, null, sym.BYTE, yyline+1, yycolumn+1);}
+("char") {contador ++; return new Yytoken(contador, null, sym.CHAR, yyline+1, yycolumn+1);}
+("short") {contador ++; return new Yytoken(contador, null, sym.SHORT, yyline+1, yycolumn+1);}
+("int") {contador ++; return new Yytoken(contador, null, sym.INT, yyline+1, yycolumn+1);}
+("float") {contador ++; return new Yytoken(contador, null, sym.FLOAT, yyline+1, yycolumn+1);}
+("long") {contador ++; return new Yytoken(contador, null, sym.LONG, yyline+1, yycolumn+1);}
+("double") {contador ++; return new Yytoken(contador, null, sym.DOUBLE, yyline+1, yycolumn+1);}
+//("String") {contador ++; return new Yytoken(contador, null, sym.STRING, yyline+1, yycolumn+1);}
+("enum") {contador ++; return new Yytoken(contador, null, sym.ENUM, yyline+1, yycolumn+1);}
 //--------------------------------------------------------------------------------------------------
 
 //--------------------------------------KEYWORDS------------------------------------------------------
-("break") {contador++; return new Yytoken(contador, yytext(), Simbolos.BREAK.ordinal(), yyline, yychar); }
-("case") {contador++; return new Yytoken(contador, yytext(), Simbolos.CASE.ordinal(), yyline, yychar); }
-("catch") {contador++; return new Yytoken(contador, yytext(), Simbolos.CATCH.ordinal(), yyline, yychar); }
-("class") {contador++; return new Yytoken(contador, yytext(), Simbolos.CLASS.ordinal(), yyline, yychar); }
-("continue") {contador++; return new Yytoken(contador, yytext(), Simbolos.CONTINUE.ordinal(), yyline, yychar); }
-("default") {contador++; return new Yytoken(contador, yytext(), Simbolos.DEFAULT.ordinal(), yyline, yychar); }
-("do") {contador++; return new Yytoken(contador, yytext(), Simbolos.DO.ordinal(), yyline, yychar); }
-("else") {contador++; return new Yytoken(contador, yytext(), Simbolos.ELSE.ordinal(), yyline, yychar); }
-("extends") {contador++; return new Yytoken(contador, yytext(), Simbolos.EXTENDS.ordinal(), yyline, yychar); }
-("false") {contador++; return new Yytoken(contador, yytext(), Simbolos.FALSE.ordinal(), yyline, yychar); }
-("finally") {contador++; return new Yytoken(contador, yytext(), Simbolos.FINALLY.ordinal(), yyline, yychar); }
-("for") {contador++; return new Yytoken(contador, yytext(), Simbolos.FOR.ordinal(), yyline, yychar); }
-("if") {contador++; return new Yytoken(contador, yytext(), Simbolos.IF.ordinal(), yyline, yychar); }
-("implements") {contador++; return new Yytoken(contador, yytext(), Simbolos.IMPLEMENTS.ordinal(), yyline, yychar); }
-("import") {contador++; return new Yytoken(contador, yytext(), Simbolos.IMPORT.ordinal(), yyline, yychar); }
-("instanceof") {contador++; return new Yytoken(contador, yytext(), Simbolos.INSTANCEOF.ordinal(), yyline, yychar); }
-("interface") {contador++; return new Yytoken(contador, yytext(), Simbolos.INTERFACE.ordinal(), yyline, yychar); }
-("new") {contador++; return new Yytoken(contador, yytext(), Simbolos.NEW.ordinal(), yyline, yychar); }
-("null") {contador++; return new Yytoken(contador, yytext(), Simbolos.NULL.ordinal(), yyline, yychar); }
-("package") {contador++; return new Yytoken(contador, yytext(), Simbolos.PACKAGE.ordinal(), yyline, yychar); }
-("return") {contador++; return new Yytoken(contador, yytext(), Simbolos.RETURN.ordinal(), yyline, yychar); }
-("super") {contador++; return new Yytoken(contador, yytext(), Simbolos.SUPER.ordinal(), yyline, yychar); }
-("switch") {contador++; return new Yytoken(contador, yytext(), Simbolos.SWITCH.ordinal(), yyline, yychar); }
-("this") {contador++; return new Yytoken(contador, yytext(), Simbolos.THIS.ordinal(), yyline, yychar); }
-("throw") {contador++; return new Yytoken(contador, yytext(), Simbolos.THROW.ordinal(), yyline, yychar); }
-("true") {contador++; return new Yytoken(contador, yytext(), Simbolos.TRUE.ordinal(), yyline, yychar); }
-("try") {contador++; return new Yytoken(contador, yytext(), Simbolos.TRY.ordinal(), yyline, yychar); }
-("while") {contador++; return new Yytoken(contador, yytext(), Simbolos.WHILE.ordinal(), yyline, yychar); }
-("void") {contador++; return new Yytoken(contador, yytext(), Simbolos.VOID.ordinal(), yyline, yychar); }
 
+("break") {contador++; return new Yytoken(contador, null, sym.BREAK, yyline + 1, yycolumn + 1); }
 
+("case") {contador++; return new Yytoken(contador, null, sym.CASE, yyline + 1, yycolumn + 1); }
+
+("catch") {contador++; return new Yytoken(contador, null, sym.CATCH, yyline + 1, yycolumn + 1); }
+
+("class") {contador++; return new Yytoken(contador, null, sym.CLASS, yyline + 1, yycolumn + 1); }
+
+("continue") {contador++; return new Yytoken(contador, null, sym.CONTINUE, yyline + 1, yycolumn + 1); }
+
+("default") {contador++; return new Yytoken(contador, null, sym.DEFAULT, yyline + 1, yycolumn + 1); }
+
+("do") {contador++; return new Yytoken(contador, null, sym.DO, yyline + 1, yycolumn + 1); }
+
+("else") {contador++; return new Yytoken(contador, null, sym.ELSE, yyline + 1, yycolumn + 1); }
+
+("extends") {contador++; return new Yytoken(contador, null, sym.EXTENDS, yyline + 1, yycolumn + 1); }
+
+("false") {contador++; return new Yytoken(contador, false, sym.BOOLEAN_LITERAL, yyline + 1, yycolumn + 1); }
+
+("finally") {contador++; return new Yytoken(contador, null, sym.FINALLY, yyline + 1, yycolumn + 1); }
+
+("for") {contador++; return new Yytoken(contador, null, sym.FOR, yyline + 1, yycolumn + 1); }
+
+("if") {contador++; return new Yytoken(contador, null, sym.IF, yyline + 1, yycolumn + 1); }
+
+("implements") {contador++; return new Yytoken(contador, null, sym.IMPLEMENTS, yyline + 1, yycolumn + 1); }
+
+("import") {contador++; return new Yytoken(contador, null, sym.IMPORT, yyline + 1, yycolumn + 1); }
+
+("instanceof") {contador++; return new Yytoken(contador, null, sym.INSTANCEOF, yyline + 1, yycolumn + 1); }
+
+("interface") {contador++; return new Yytoken(contador, null, sym.INTERFACE, yyline + 1, yycolumn + 1); }
+
+("new") {contador++; return new Yytoken(contador, null, sym.NEW, yyline + 1, yycolumn + 1); }
+
+("null") {contador++; return new Yytoken(contador, null, sym.NULL, yyline + 1, yycolumn + 1); }
+
+("package") {contador++; return new Yytoken(contador, null, sym.PACKAGE, yyline + 1, yycolumn + 1); }
+
+("return") {contador++; return new Yytoken(contador, null, sym.RETURN, yyline + 1, yycolumn + 1); }
+
+("super") {contador++; return new Yytoken(contador, null, sym.SUPER, yyline + 1, yycolumn + 1); }
+
+("switch") {contador++; return new Yytoken(contador, null, sym.SWITCH, yyline + 1, yycolumn + 1); }
+
+("this") {contador++; return new Yytoken(contador, null, sym.THIS, yyline + 1, yycolumn + 1); }
+
+("throw") {contador++; return new Yytoken(contador, null, sym.THROW, yyline + 1, yycolumn + 1); }
+
+("true") {contador++; return new Yytoken(contador, true, sym.BOOLEAN, yyline + 1, yycolumn + 1); }
+
+("try") {contador++; return new Yytoken(contador, null, sym.TRY, yyline + 1, yycolumn + 1); }
+
+("while") {contador++; return new Yytoken(contador, null, sym.WHILE, yyline + 1, yycolumn + 1); }
+
+("void") {contador++; return new Yytoken(contador, null, sym.VOID, yyline + 1, yycolumn + 1); }
 //-------------------------------------------------------------------------------------------------
 
-
+ \" { yybegin(STRING); string.setLength(0); }
 
 //-------------------------------------INTEGER_LITERAL---------------------------------------------
-{DecIntegerLiteral} {contador++; return new Yytoken(contador, yytext(), Simbolos.INTEGER_LITERAL.ordinal(), yyline, yychar);}
+{DecIntegerLiteral} {contador++; return new Yytoken(contador, new Integer(yytext()), sym.INTEGER_LITERAL, yyline+1, yycolumn + 1);}
 //-------------------------------------------------------------------------------------------------
 
 //-------------------------------------FLOAT_LITERAL---------------------------------------------
-{floatingPointLiteral} {contador++; return new Yytoken(contador, yytext(), Simbolos.FLOATING_POINT_LITERAL.ordinal(), yyline, yychar);}
+{floatingPointLiteral} {contador++; return new Yytoken(contador, new Float(yytext().substring(0,yylength()-1)), sym.FLOATING_POINT_LITERAL, yyline+1, yycolumn + 1);}
 //-------------------------------------------------------------------------------------------------
 
 //------------------------------------------DOUBLE_LITERAL-------------------------------------------------------
-{DoubleLiteral} {contador++; return new Yytoken(contador, yytext(), Simbolos.DOUBLE_LITERAL.ordinal(), yyline, yychar);}
+{DoubleLiteral} {contador++; return new Yytoken(contador, new Double(yytext()), sym.FLOATING_POINT_LITERAL, yyline, yychar);}
 //-------------------------------------------------------------------------------------------------
 
 //-------------------------------------IDENTIFIER--------------------------------------------------
-{IDENTIFICADOR} {contador++; return new Yytoken(contador, yytext(), Simbolos.ID.ordinal(), yyline, yychar); }
+{IDENTIFICADOR} {contador++; return new Yytoken(contador, yytext(), sym.IDENTIFIER, yyline+1, yycolumn + 1); }
 //-------------------------------------------------------------------------------------------------	
+}
+<STRING> {
+(\") { yybegin(YYINITIAL); return new Yytoken(contador, string.toString(), sym.STRING_LITERAL, yyline+1, yycolumn + 1); }
+{StringCharacter}+ { string.append( yytext() ); }
+/* escape sequences */
+"\\b" { string.append( '\b' ); }
+"\\t" { string.append( '\t' ); }
+"\\n" { string.append( '\n' ); }
+"\\f" { string.append( '\f' ); }
+"\\r" { string.append( '\r' ); }
+"\\\"" { string.append( '\"' ); }
+"\\'" { string.append( '\'' ); }
+"\\\\" { string.append( '\\' ); }
+
+/* error cases */
+\\. { throw new RuntimeException("Illegal escape sequence \""+yytext()+"\""); }
+{LineTerminator} { throw new RuntimeException("Unterminated string at end of line"); }
+}
+
 
 //----------------------------------------COMMENTS-------------------------------------------------
 {Comment}                      { }
 //-------------------------------------------------------------------------------------------------
 
-//-----------------------------------------SPECIAL CHARACTER---------------------------------------
-(\") {contador++; return new Yytoken(contador, yytext(), Simbolos.SPECIAL_CHARACTER.ordinal(), yyline, yychar);}
-{special} {contador++; return new Yytoken(contador, yytext(), Simbolos.SPECIAL_CHARACTER.ordinal(), yyline, yychar); }
-//-------------------------------------------------------------------------------------------------
 
 //--------------------------------------------OPERATORS-----------------------------------------------------
-{Operators} {contador++; return new Yytoken(contador, yytext(), Simbolos.OPERATORS.ordinal(), yyline, yychar);}
+//{Operators} {contador++; return new Yytoken(contador, yytext(), Simbolos.OPERATORS.ordinal(), yyline, yychar);}
+ /* operators */
+"=" {contador++; return new Yytoken(contador, null, sym.EQ, yyline + 1, yycolumn + 1); }
+">" {contador++; return new Yytoken(contador, null, sym.GT, yyline + 1, yycolumn + 1); }
+"<" {contador++; return new Yytoken(contador, null, sym.LT, yyline + 1, yycolumn + 1); }
+"!" {contador++; return new Yytoken(contador, null, sym.NOT, yyline + 1, yycolumn + 1); }
+"~" {contador++; return new Yytoken(contador, null, sym.COMP, yyline + 1, yycolumn + 1); }
+"?" {contador++; return new Yytoken(contador, null, sym.QUESTION, yyline + 1, yycolumn + 1); }
+":" {contador++; return new Yytoken(contador, null, sym.COLON, yyline + 1, yycolumn + 1); }
+"==" {contador++; return new Yytoken(contador, null, sym.EQEQ, yyline + 1, yycolumn + 1); }
+"<=" {contador++; return new Yytoken(contador, null, sym.LTEQ, yyline + 1, yycolumn + 1); }
+">=" {contador++; return new Yytoken(contador, null, sym.GTEQ, yyline + 1, yycolumn + 1); }
+"!=" {contador++; return new Yytoken(contador, null, sym.NOTEQ, yyline + 1, yycolumn + 1); }
+"&&" {contador++; return new Yytoken(contador, null, sym.ANDAND, yyline + 1, yycolumn + 1); }
+"||" {contador++; return new Yytoken(contador, null, sym.OROR, yyline + 1, yycolumn + 1); }
+"++" {contador++; return new Yytoken(contador, null, sym.PLUSPLUS, yyline + 1, yycolumn + 1); }
+"--" {contador++; return new Yytoken(contador, null, sym.MINUSMINUS, yyline + 1, yycolumn + 1); }
+"+" {contador++; return new Yytoken(contador, null, sym.PLUS, yyline + 1, yycolumn + 1); }
+"-" {contador++; return new Yytoken(contador, null, sym.MINUS, yyline + 1, yycolumn + 1); }
+"*" {contador++; return new Yytoken(contador, null, sym.MULT, yyline + 1, yycolumn + 1); }
+"/" {contador++; return new Yytoken(contador, null, sym.DIV, yyline + 1, yycolumn + 1); }
+"&" {contador++; return new Yytoken(contador, null, sym.AND, yyline + 1, yycolumn + 1); }
+"|" {contador++; return new Yytoken(contador, null, sym.OR, yyline + 1, yycolumn + 1); }
+"^" {contador++; return new Yytoken(contador, null, sym.XOR, yyline + 1, yycolumn + 1); }
+"%" {contador++; return new Yytoken(contador, null, sym.MOD, yyline + 1, yycolumn + 1); }
+"<<" {contador++; return new Yytoken(contador, null, sym.LSHIFT, yyline + 1, yycolumn + 1); }
+">>" {contador++; return new Yytoken(contador, null, sym.RSHIFT, yyline + 1, yycolumn + 1); }
+">>>" {contador++; return new Yytoken(contador, null, sym.URSHIFT, yyline + 1, yycolumn + 1); }
+"+=" {contador++; return new Yytoken(contador, null, sym.PLUSEQ, yyline + 1, yycolumn + 1); }
+"-=" {contador++; return new Yytoken(contador, null, sym.MINUSEQ, yyline + 1, yycolumn + 1); }
+"*=" {contador++; return new Yytoken(contador, null, sym.MULTEQ, yyline + 1, yycolumn + 1); }
+"/=" {contador++; return new Yytoken(contador, null, sym.DIVEQ, yyline + 1, yycolumn + 1); }
+"&=" {contador++; return new Yytoken(contador, null, sym.ANDEQ, yyline + 1, yycolumn + 1); }
+"|=" {contador++; return new Yytoken(contador, null, sym.OREQ, yyline + 1, yycolumn + 1); }
+"^=" {contador++; return new Yytoken(contador, null, sym.XOREQ, yyline + 1, yycolumn + 1); }
+"%=" {contador++; return new Yytoken(contador, null, sym.MODEQ, yyline + 1, yycolumn + 1); }
+"<<=" {contador++; return new Yytoken(contador, null, sym.LSHIFTEQ, yyline + 1, yycolumn + 1); }
+">>=" {contador++; return new Yytoken(contador, null, sym.RSHIFTEQ, yyline + 1, yycolumn + 1); }
+">>>=" {contador++; return new Yytoken(contador, null, sym.URSHIFTEQ, yyline + 1, yycolumn + 1); }
 //-------------------------------------------------------------------------------------------------
 
 //-------------------------------------------WHITESPACE--------------------------------------------

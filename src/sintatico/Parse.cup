@@ -1,3 +1,4 @@
+package lexico;
 import java_cup.runtime.*;
 
 /* Parser code so that it can interface with the scanner created with JFlex and change the way that it reports errors (include line and column number of the error).*/
@@ -76,6 +77,15 @@ terminal QUESTION; // conditional_expression
 terminal MULTEQ, DIVEQ, MODEQ, PLUSEQ, MINUSEQ; // assignment_operator
 terminal LSHIFTEQ, RSHIFTEQ, URSHIFTEQ; // assignment_operator
 terminal ANDEQ, XOREQ, OREQ; // assignment_operator
+terminal ENUM;
+//terminal STRING;
+terminal NULL;
+
+terminal java.lang.String STRING_LITERAL;
+terminal java.lang.String IDENTIFIER;
+terminal java.lang.Boolean BOOLEAN_LITERAL;
+terminal java.lang.Number INTEGER_LITERAL;
+terminal java.lang.Number FLOATING_POINT_LITERAL;
 
 /* Non Terminals used in the Grammar Section.
 

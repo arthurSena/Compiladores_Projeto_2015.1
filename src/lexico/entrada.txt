@@ -1,1 +1,6 @@
-()
+package testando;
+import testando2.Teste;
+t.a("A");
+	
+String 123temp = "this project is fucked as hell";
+		
