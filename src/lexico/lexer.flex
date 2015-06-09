@@ -10,6 +10,7 @@ import java_cup.runtime.*;
 //%function nextToken 
 
 %class Analizador 
+%implements sym
 
 %{ 
   StringBuilder string = new StringBuilder();

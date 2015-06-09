@@ -1,8 +1,9 @@
 package lexico;
-
+//Yytoken(contador, null, sym.CATCH, yyline + 1, yycolumn + 1);
 public class Yytoken extends java_cup.runtime.Symbol{
-	Yytoken(int numToken, Object text, int compo, int line, int charBegin) {
-		super(compo, -1, -1, text);
+	Yytoken(int numToken, Object value, int compo, int line, int column) {
+		super(compo, 0, 0, value);
+//		super()
 		// Contador para el número de tokens reconocidos
 		m_numToken = numToken;
 		// String del token reconocido
@@ -12,7 +13,7 @@ public class Yytoken extends java_cup.runtime.Symbol{
 		// Número de linea
 		m_line = line;
 		// Columna donde empieza el primer carácter del toke
-		column = charBegin;
+		column = column;
 	}
 
 	// Métodos de los atributos de la clase
@@ -23,8 +24,9 @@ public class Yytoken extends java_cup.runtime.Symbol{
 	public int column;
 
 	public String toString() {
+		System.out.println("SDKLFJSALKDFJLSKADJ");
 			return "Token #" + m_numToken + " " + m_text + " Value: " + value
-					+ " Line: " + m_line + " Column: " + column;
+					+ " Line: " + m_line + " Column: " + column + " SYM> " +sym + " ID> " + super.parse_state;
 	}
 
 }
